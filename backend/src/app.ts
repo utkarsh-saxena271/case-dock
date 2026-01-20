@@ -10,7 +10,6 @@ const app = express()
 
 // Connecting to database
 connectDB()
-console.log("Connected to Database")
 
 // Global middlewares
 app.use(express.json())
