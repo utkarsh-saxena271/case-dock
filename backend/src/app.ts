@@ -3,8 +3,7 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import connectDB from './db/db.js'
-import authRoutes from './routes/auth.routes.js'
-import caseRoutes from './routes/case.routes.js'
+import v1Router from './v1/index.js'
 
 
 // App
@@ -16,13 +15,16 @@ connectDB()
 // Global middlewares
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true
+}))
 
 // Routes
-app.use('/api/auth',authRoutes)
-app.use('/api/cases', caseRoutes)
+app.use('/api/v1', v1Router)
 
 
 
-app.listen(8080,()=>{
+app.listen(8080, () => {
     console.log("Server is listening on port : 8080")
 })

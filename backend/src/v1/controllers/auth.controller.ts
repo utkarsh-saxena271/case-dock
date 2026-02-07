@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+import User from "../../models/user.model.js";
 import type { RequestHandler } from "express";
 import bcrypt from "bcrypt";
 import jwt, { type JwtPayload } from "jsonwebtoken";
@@ -30,7 +30,7 @@ export const signupController:RequestHandler = async (req,res) => {
             return res.status(500).json({message:"User creation failed"})
         }
         return res.status(201).json({message:"User created successfully", data:{
-            username : user.fullName?.firstName + " " + user.fullName?.lastName,
+            fullName: user.fullName,
             email : user.email,
             enrollmentNumber : user.enrollmentNumber
         }})
@@ -56,12 +56,12 @@ export const loginController:RequestHandler = async (req,res) => {
         const token = jwt.sign({userId : user.id}, jwtSecret);
         res.cookie("token", token, {
             httpOnly : true,
-            secure : true, 
-            sameSite : "strict",
+            secure : process.env.NODE_ENV === "production",
+            sameSite : "lax",
             maxAge : 24 * 60 * 60 * 1000
         })
         return res.status(200).json({message:"Login successful", data:{
-            username : user.fullName?.firstName + " " + user.fullName?.lastName,
+            fullName: user.fullName,
             email : user.email,
             enrollmentNumber : user.enrollmentNumber
         }})
@@ -91,7 +91,7 @@ export const getUserController:RequestHandler = async (req,res) => {
             return res.status(404).json({message:"User not found"})
         }
         return res.status(200).json({message:"User found", data:{
-            username : user.fullName?.firstName + " " + user.fullName?.lastName,
+            fullName: user.fullName,
             email : user.email,
             enrollmentNumber : user.enrollmentNumber
         }})
