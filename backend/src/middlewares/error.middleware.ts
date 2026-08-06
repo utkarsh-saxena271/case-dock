@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import ApiError from "../utils/apiError.util.js";
+import type APIError from "../utils/apiError.util.js";
 
 const errorHandler = (
   err: Error | ApiError,
@@ -20,7 +21,7 @@ const errorHandler = (
     success: false,
     message,
     errors
-  });
+  } as APIError);
 };
 
 export default errorHandler;
