@@ -9,12 +9,16 @@ datasource db {
 
 model User {
   id               String  @id @default(uuid())
-  fullName         String
+  firstName         String
+  lastName          String
   userName         String  @unique
   email            String  @unique
-  phone            String?
+  emailVerified Boolean @default(false)
   enrollmentNumber String  @unique
   password         String
+
+  resetPasswordToken String?
+  resetPasswordExpiry DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -52,6 +56,11 @@ enum Permission {
   DELETE_CASE
 }
 
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+}
+
 model Membership {
   id       String   @id @default(uuid())
   joinedAt DateTime @default(now())
@@ -63,6 +72,7 @@ model Membership {
 
   role        Role         @default(MEMBER)
   permissions Permission[]
+  status MembershipStatus @default(PENDING)
 
   @@unique([userId, chamberId])
 }
