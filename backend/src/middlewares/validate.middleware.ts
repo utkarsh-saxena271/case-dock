@@ -1,10 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
-import APIError from "../utils/apiError.util.js";
 import { type ZodType } from "zod";
+
+import APIError from "../utils/apiError.util.js";
 
 const validate =
     (schema: ZodType) =>
-        (req: Request, res: Response, next: NextFunction) => {
+        (req: Request, _res: Response, next: NextFunction) => {
             const result = schema.safeParse(req.body);
 
             if (!result.success) {
@@ -14,7 +15,7 @@ const validate =
                 }));
                 return next(new APIError(400, errors[0]?.message || "Validation failed", errors));
             }
-
+            req.body = result.data;
             next();
         };
 
