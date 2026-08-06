@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String  @id @default(uuid())
+  fullName         String
+  userName         String  @unique
+  email            String  @unique
+  phone            String?
+  enrollmentNumber String  @unique
+  password         String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships   Membership[]
+  personalCases Case[]       @relation("PersonalCaseOwner")
+  documents     Document[]
+}
+
+model Chamber {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships Membership[]
+  cases       Case[]
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum Permission {
+  INVITE_MEMBERS
+  REMOVE_MEMBERS
+  EDIT_GROUP
+  READ_CASE
+  CREATE_CASE
+  UPDATE_CASE
+  DELETE_CASE
+}
+
+model Membership {
+  id       String   @id @default(uuid())
+  joinedAt DateTime @default(now())
+
+  userId    String
+  chamberId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chamber   Chamber @relation(fields: [chamberId], references: [id], onDelete: Cascade)
+
+  role        Role         @default(MEMBER)
+  permissions Permission[]
+
+  @@unique([userId, chamberId])
+}
+
+enum CaseStatus {
+  ACTIVE
+  ON_HOLD
+  CLOSED
+}
+
+enum CaseOwnerType {
+  PERSONAL
+  CHAMBER
+}
+
+model Case {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  status      CaseStatus    @default(ACTIVE)
+  ownerType   CaseOwnerType
+
+  // exactly one of these two is set, based on ownerType
+  personalOwnerId String?
+  personalOwner   User?    @relation("PersonalCaseOwner", fields: [personalOwnerId], references: [id], onDelete: Cascade)
+
+  chamberId String?
+  chamber   Chamber? @relation(fields: [chamberId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  hearings Hearing[]
+}
+
+model Hearing {
+  id     String   @id @default(uuid())
+  date   DateTime
+  notes  String?
+
+  caseId String
+  case   Case   @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  documents Document[]
+}
+
+model Document {
+  id         String @id @default(uuid())
+  customName String
+  fileUrl    String
+
+  hearingId String
+  hearing   Hearing @relation(fields: [hearingId], references: [id], onDelete: Cascade)
+
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
