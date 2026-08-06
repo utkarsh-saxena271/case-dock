@@ -1,9 +1,13 @@
-import { Redis } from 'ioredis'
-import {envConfig} from './env.config.js'
+import { createClient } from "redis";
+import { envConfig } from "./env.config.js"
 
-const redis = new Redis(envConfig.REDIS_URL)
+const REDIS_URL = envConfig.REDIS_URL
 
-redis.on('connect', () => console.log('Connected to Redis'))
-redis.on('error', (err) => console.error('Redis error:', err))
+const client = createClient({
+    url : REDIS_URL
+})
 
-export default redis
+client.on('error', err => console.log('Redis Client Error', err));
+client.on('connect', ()=>console.log('redis connected'))
+
+export default client
