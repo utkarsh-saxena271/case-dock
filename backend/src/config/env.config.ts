@@ -9,7 +9,6 @@ function requireEnv(key: string): string {
 export const envConfig = {
     PORT: requireEnv("PORT"),
     NODE_ENV: requireEnv("NODE_ENV"),
-    JWT_SECRET:requireEnv("JWT_SECRET"),
     DATABASE_URL:requireEnv("DATABASE_URL"),
     REDIS_URL:requireEnv('REDIS_URL'),
     MAIL_HOST:requireEnv('MAIL_HOST'),
