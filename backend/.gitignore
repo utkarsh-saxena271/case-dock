@@ -20,6 +20,8 @@ node_modules
 # production
 /dist
 
+/temp
+
 # misc
 .DS_Store
 *.pem
