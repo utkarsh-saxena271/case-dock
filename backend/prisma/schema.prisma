@@ -105,7 +105,8 @@ model Case {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  hearings Hearing[]
+  hearings  Hearing[]
+  documents Document[]
 }
 
 model Hearing {
@@ -126,9 +127,13 @@ model Document {
   id         String @id @default(uuid())
   customName String
   fileUrl    String
+  fileId     String
 
-  hearingId String
-  hearing   Hearing @relation(fields: [hearingId], references: [id], onDelete: Cascade)
+  caseId    String?
+  case      Case?    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  hearingId String?
+  hearing   Hearing? @relation(fields: [hearingId], references: [id], onDelete: Cascade)
 
   uploadedById String
   uploadedBy   User   @relation(fields: [uploadedById], references: [id])
