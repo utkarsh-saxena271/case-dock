@@ -1,6 +1,8 @@
 import express from 'express'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
+import fs from 'fs'
+import path from 'path';
 
 import { envConfig } from './config/env.config.js'
 import errorHandler from './middlewares/error.middleware.js';
@@ -21,14 +23,26 @@ app.use(helmet())
 app.use('/api', mainRouter)
 
 
-
 // error handler
 app.use(errorHandler);
+
+// ensure required directories exist
+const ensureDirectories = () => {
+    const tempDir = path.join(process.cwd(), 'temp');
+    console.log('Checking temp dir at:', tempDir);
+    if (!fs.existsSync(tempDir)) {
+        console.log('Creating temp dir...');
+        fs.mkdirSync(tempDir, { recursive: true });
+    } else {
+        console.log('Temp dir already exists');
+    }
+}
 
 
 // entry pointw
 const startServer = async() => {
     try {
+        ensureDirectories()
         await client.connect()
 
         app.listen(PORT, () => {
