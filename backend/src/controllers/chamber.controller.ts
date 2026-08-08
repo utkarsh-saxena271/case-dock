@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.util.js";
-import { createChamberService, deleteChamberService, discoverChambersService, getChamberByIdService, getMyChambersService, updateChamberService } from "../services/chamber.service.js";
+import { createChamberService, deleteChamberService, discoverChambersService, getChamberByIdService, getChamberCasesService, getMyChambersService, updateChamberService } from "../services/chamber.service.js";
 import ApiResponse from "../utils/apiResponse.util.js";
 import APIError from "../utils/apiError.util.js";
 
@@ -22,13 +22,13 @@ export const getMyChambersController = asyncHandler(async (req: Request, res: Re
     )
 })
 
-export const getChamberByIdController = asyncHandler(async (req:Request, res:Response) => {
+export const getChamberByIdController = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user.id
     const chamberId = req.params.chamberId
     if (!chamberId || typeof chamberId !== 'string') {
         throw new APIError(400, 'Chamber Id is required')
     }
-    const result = await getChamberByIdService({userId, chamberId})
+    const result = await getChamberByIdService({ userId, chamberId })
 
     return res.status(200).json(
         new ApiResponse(200, result, 'Chamber fetched successfully')
@@ -41,7 +41,7 @@ export const updateChamberController = asyncHandler(async (req: Request, res: Re
     if (!chamberId || typeof chamberId !== 'string') {
         throw new APIError(400, 'Chamber Id is required')
     }
-    const {name, description} = req.body
+    const { name, description } = req.body
     const result = await updateChamberService({ chamberId, name, description })
 
     return res.status(200).json(
@@ -73,5 +73,18 @@ export const discoverChambersController = asyncHandler(async (req: Request, res:
 
     return res.status(200).json(
         new ApiResponse(200, result, 'Chambers fetched successfully')
+    )
+})
+
+export const getChamberCasesController = asyncHandler(async (req: Request, res: Response) => {
+    const chamberId = req.params.chamberId;
+
+    if (!chamberId || typeof chamberId !== 'string') {
+        throw new APIError(400, 'Chamber Id is required')
+    }
+    const result = await getChamberCasesService(chamberId);
+
+    return res.status(200).json(
+        new ApiResponse(200, result, 'Fetched chamber cases successfully')
     )
 })

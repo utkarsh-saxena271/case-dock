@@ -1,31 +1,9 @@
 import prisma from "../config/db.config.js";
 import { Permission } from "../generated/prisma/enums.js";
+import type { CreateChamber, DiscoverChambers, GetChamber, UpdateChamber } from "../types/chamber.types.js";
 import APIError from "../utils/apiError.util.js";
 
-interface CreateChamber {
-    userId : string,
-    chamberData:{
-        name:string,
-        description?:string
-    }
-}
 
-interface UpdateChamber {
-    chamberId: string,
-    name?: string,
-    description?: string
-}
-
-interface GetChamber{
-    userId:string,
-    chamberId:string
-}
-
-interface DiscoverChambers {
-    q?: string;
-    page?: number;
-    limit?: number;
-}
 
 
 export const createChamberService = async(data:CreateChamber) => {
@@ -157,4 +135,13 @@ export const discoverChambersService = async (data: DiscoverChambers) => {
             totalPages: Math.ceil(total / limit)
         }
     };
+}
+
+export const getChamberCasesService = async (chamberId: string) => {
+    const cases =  await prisma.case.findMany({
+        where: { chamberId },
+        orderBy: { createdAt: 'desc' }
+    });
+
+    return cases;
 }
