@@ -21,7 +21,7 @@ const sendEmail = async ({ to, subject, html }: SendEmailOptions) => {
 }
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const link = `${envConfig.CLIENT_URL}/verify-email?token=${token}`
+  const link = `${envConfig.CLIENT_URL}/auth/verify-email?token=${token}`
 
   await sendEmail({
     to: email,
@@ -39,7 +39,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 }
 
 export const sendResetPasswordEmail = async (email: string, token: string) => {
-  const link = `${envConfig.CLIENT_URL}/reset-password?token=${token}`
+  const link = `${envConfig.CLIENT_URL}/auth/reset-password?token=${token}`
 
   await sendEmail({
     to: email,
