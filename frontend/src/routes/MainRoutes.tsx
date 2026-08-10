@@ -5,6 +5,7 @@ import VerifyEmail from '../pages/auth/VerifyEmail'
 import ForgotPassword from '../pages/auth/ForgotPassword'
 import ResetPassword from '../pages/auth/ResetPassword'
 import AuthLayout from '../pages/auth/AuthLayout'
+import ProtectedRoute from './ProtectedRoute'
 
 const MainRoutes = () => {
   return (
@@ -15,6 +16,11 @@ const MainRoutes = () => {
         <Route path='verify-email' element={<VerifyEmail />} />
         <Route path='forgot-password' element={<ForgotPassword />} />
         <Route path='reset-password' element={<ResetPassword />} />
+      </Route>
+
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute/>}>
+
       </Route>
 
     </Routes>
