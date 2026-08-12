@@ -8,10 +8,10 @@ import AuthInitializer from './components/AuthInitializer.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <BrowserRouter>
-      <AuthInitializer>
+    <AuthInitializer>
+      <BrowserRouter>
         <App />
-      </AuthInitializer>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthInitializer>
   </Provider>
 )
