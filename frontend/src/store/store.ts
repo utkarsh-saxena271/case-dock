@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './slices/authSlice'
 import chamberReducer from './slices/chamberSlice'
+import membershipReducer from './slices/membershipSlice'
 
 export const store = configureStore({
     reducer : {
         auth : authReducer,
-        chamber: chamberReducer
+        chamber: chamberReducer,
+        membership: membershipReducer
     }
 })
 

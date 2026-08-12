@@ -67,7 +67,7 @@ export const fetchMyChamberById = (chamberId:string) => async (dispatch:AppDispa
         return res.data.data
     } catch (error) {
         if(error instanceof Error){
-            console.error(error)
+            console.error(error.message)
         }
         throw error
     }
