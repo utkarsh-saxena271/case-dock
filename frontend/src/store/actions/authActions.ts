@@ -94,7 +94,7 @@ export const fetchMe = () => async (dispatch: AppDispatch, getState: () => RootS
             }
         })
 
-        dispatch(setUser({ user: res.data.data.user }))
+        dispatch(setUser({ user: res.data.data }))
         return res.data.data
     } catch (error) {
         if (error instanceof Error) {
