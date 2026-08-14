@@ -22,6 +22,7 @@ const Login = () => {
       setError('')
       await dispatch(loginUser({ email, password }))
       setStatus('success')
+      console.log(user)
       navigate('/case')
     } catch (err) {
       setStatus('error')
