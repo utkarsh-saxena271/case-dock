@@ -1,4 +1,4 @@
-import MainRoutes from './routes/MainRoutes'
+import MainRoutes from './routes/mainRoutes'
 
 function App() {
 
