@@ -13,7 +13,7 @@ interface ReviewJoinRequest{
 interface UpdateMember{
     chamberId:string,
     membershipId:string,
-    role:'ADMIN' | 'MEMBER',
+    role?:'ADMIN' | 'MEMBER',
     permissions?:Permission[]
 }
 
