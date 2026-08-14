@@ -1,57 +1,122 @@
-import { useDispatch, useSelector } from "react-redux"
-import type { AppDispatch, RootState } from "../../store/store"
-import { useEffect, useState } from "react"
-import { fetchMyChambers } from "../../store/actions/chamberActions"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { motion } from 'motion/react'
+import type { AppDispatch, RootState } from '../../store/store'
+import { fetchMyChambers } from '../../store/actions/chamberActions'
 
 const ChamberList = () => {
-  const [status, setStatus] = useState<'loading' | 'empty' | 'idle' | 'error'>('idle') 
+  const [status, setStatus] = useState<'loading' | 'empty' | 'idle' | 'error'>('idle')
   const [error, setError] = useState<string>('')
   const chambers = useSelector((state: RootState) => state.chamber.chambers)
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
         setStatus('loading')
         const result = await dispatch(fetchMyChambers())
         if (result.length === 0) {
           setStatus('empty')
-        }else{
+        } else {
           setStatus('idle')
         }
-      } catch (error) {
+      } catch (err) {
         setStatus('error')
-        if (error instanceof Error) {
-          setError(error.message)
+        if (err instanceof Error) {
+          setError(err.message)
         } else {
           setError('Error in fetching chambers')
         }
       }
     })()
-  }, [])
+  }, [dispatch])
+
   return (
-    <>
-      <div>
-        <Link to={'/chamber/create'}>Create Chamber</Link>
-        <Link to={'/chamber/discover'}>Discover Chamber</Link>
-      </div>
-      {status === 'empty' && <div>You have not joined any chambers</div>}
-      {status === 'error' && <div>{error}</div>}
-      {status === 'loading' && <div>Loading...</div>}
-      <div>
-        {status === 'idle' &&
-        chambers.map(chamber => (
-          <Link to={`/chamber/${chamber.id}`} key={chamber.id}>
-            <h1>{chamber.name}</h1>
-            <p>
-              {chamber.description}
-            </p>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      className="max-w-4xl mx-auto p-6 space-y-6"
+    >
+      <div className="flex items-center justify-between border-b border-zinc-200 pb-4">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900">Chambers</h1>
+          <p className="text-xs text-zinc-500 mt-0.5">Law chambers and collaborative practices</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/case"
+            className="text-xs font-medium text-zinc-600 hover:text-zinc-900 px-3 py-1.5 rounded-md hover:bg-zinc-100 transition-colors"
+          >
+            My Cases
           </Link>
-        ))
-      }
+          <Link
+            to="/chamber/discover"
+            className="text-xs font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 px-3 py-1.5 rounded-md transition-colors"
+          >
+            Discover
+          </Link>
+          <Link
+            to="/chamber/create"
+            className="px-3 py-1.5 text-xs font-medium text-white bg-zinc-900 hover:bg-zinc-800 rounded-md transition-colors"
+          >
+            + Create Chamber
+          </Link>
+        </div>
       </div>
-    </>
+
+      {status === 'error' && (
+        <div className="text-sm text-red-600 bg-red-50 p-4 rounded-md border border-red-200">
+          {error}
+        </div>
+      )}
+      {status === 'loading' && <div className="text-sm text-zinc-500">Loading chambers...</div>}
+
+      {status === 'empty' && (
+        <div className="text-sm text-zinc-500 py-6 text-center border border-dashed border-zinc-300 rounded-lg">
+          You have not joined any chambers yet.{' '}
+          <Link to="/chamber/discover" className="text-zinc-900 font-medium underline">
+            Discover chambers
+          </Link>{' '}
+          or create a new one.
+        </div>
+      )}
+
+      {status === 'idle' && chambers.length > 0 && (
+        <div className="border border-zinc-200 rounded-lg bg-white divide-y divide-zinc-100">
+          {chambers.map((chamber) => (
+            <motion.div
+              key={chamber.id}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.15 }}
+              className="p-4 hover:bg-zinc-50 transition-colors flex items-center justify-between"
+            >
+              <div className="space-y-1">
+                <Link
+                  to={`/chamber/${chamber.id}`}
+                  className="text-sm font-semibold text-zinc-900 hover:text-zinc-700 hover:underline"
+                >
+                  {chamber.name}
+                </Link>
+                {chamber.description ? (
+                  <p className="text-xs text-zinc-500 line-clamp-1">{chamber.description}</p>
+                ) : (
+                  <p className="text-xs text-zinc-400 italic">No description</p>
+                )}
+              </div>
+              <Link
+                to={`/chamber/${chamber.id}`}
+                className="text-xs font-medium text-zinc-500 hover:text-zinc-900"
+              >
+                View Chamber →
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </motion.div>
   )
 }
 
