@@ -31,7 +31,7 @@ export const loginUser = (data: LoginPayload) => async (dispatch: AppDispatch) =
         const res = await instance.post('/auth/login', data)
         console.log(res.data)
         dispatch(setCredentials({
-            user: res.data.data.user,
+            user: res.data.data,
             accessToken: res.data.data.accessToken
         }))
 
