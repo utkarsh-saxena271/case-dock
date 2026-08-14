@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { registerUser } from '../../store/actions/authActions'
 import type { AppDispatch } from '../../store/store'
@@ -16,7 +16,6 @@ const Register = () => {
   const [error, setError] = useState<string>('')
 
   const dispatch = useDispatch<AppDispatch>()
-  const navigate = useNavigate()
 
   const registerHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -35,7 +34,6 @@ const Register = () => {
       }
       await dispatch(registerUser(payload))
       setStatus('success')
-      navigate('/auth/verify-email')
     } catch (err) {
       setStatus('error')
       if (err instanceof Error) {
@@ -44,6 +42,45 @@ const Register = () => {
         setError('Registration failed')
       }
     }
+  }
+
+  if (status === 'success') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+        className="space-y-6 text-center"
+      >
+        <div className="mx-auto w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 font-bold text-xl">
+          ✓
+        </div>
+
+        <div className="space-y-1.5">
+          <h2 className="text-lg font-semibold text-zinc-900">Check your email</h2>
+          <p className="text-xs text-zinc-500">
+            We&apos;ve sent a verification link to activate your account.
+          </p>
+        </div>
+
+        <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-md text-left space-y-2">
+          <div className="text-xs text-zinc-500">Sent to:</div>
+          <div className="text-sm font-semibold text-zinc-900 break-all">{email}</div>
+          <p className="text-xs text-zinc-600 pt-1 leading-relaxed">
+            Click the link in the email to confirm your account and sign in. If you don&apos;t see it within a few minutes, please check your spam folder.
+          </p>
+        </div>
+
+        <div className="pt-2">
+          <Link
+            to="/auth/login"
+            className="w-full inline-block py-2 px-4 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 rounded-md transition-colors"
+          >
+            Back to Sign In
+          </Link>
+        </div>
+      </motion.div>
+    )
   }
 
   return (

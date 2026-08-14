@@ -6,8 +6,8 @@ import type { RootState } from '../store/store'
 const Landing = () => {
   const navigate = useNavigate()
   const currentUser = useSelector((state: RootState) => state.auth.user)
-  if(currentUser){
-    navigate('/chamber')
+  if (currentUser) {
+    navigate('/dashboard')
   }
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 flex flex-col justify-between">
@@ -32,7 +32,7 @@ const Landing = () => {
                   Chambers
                 </Link>
                 <Link
-                  to="/case"
+                  to="/dashboard"
                   className="px-3.5 py-1.5 text-xs font-medium text-white bg-zinc-900 hover:bg-zinc-800 rounded-md transition-colors"
                 >
                   Dashboard ({currentUser.firstName})
@@ -82,10 +82,10 @@ const Landing = () => {
             {currentUser ? (
               <>
                 <Link
-                  to="/case"
+                  to="/dashboard"
                   className="px-5 py-2.5 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 rounded-md transition-colors shadow-xs"
                 >
-                  Open Cases →
+                  Open Dashboard →
                 </Link>
                 <Link
                   to="/chamber"

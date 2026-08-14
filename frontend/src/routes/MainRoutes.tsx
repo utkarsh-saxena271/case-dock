@@ -16,6 +16,7 @@ import ChamberDetails from '../pages/chambers/ChamberDetails'
 import CaseList from '../pages/cases/CaseList'
 import CreateCase from '../pages/cases/CreateCase'
 import CaseDetails from '../pages/cases/CaseDetails'
+import Dashboard from '../pages/Dashboard'
 
 const MainRoutes = () => {
   return (
@@ -31,6 +32,7 @@ const MainRoutes = () => {
       </Route>
 
       <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/chamber" element={<ChamberList />} />
         <Route path="/chamber/create" element={<CreateChamber />} />
         <Route path="/chamber/discover" element={<DiscoverChambers />} />

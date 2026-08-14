@@ -44,6 +44,7 @@ const EditMember = () => {
   const isOwner = myMembership?.role === 'OWNER'
   const canEdit = isOwner || myMembership?.permissions.includes('EDIT_GROUP')
   const canRemove = isOwner || myMembership?.permissions.includes('REMOVE_MEMBERS')
+  const isSelf = Boolean(currentUser?.id && targetMember?.user?.id === currentUser.id)
 
   useEffect(() => {
     if (!chamberId) return
@@ -80,7 +81,7 @@ const EditMember = () => {
 
   const saveMemberHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!chamberId || !membershipId) return
+    if (!chamberId || !membershipId || isSelf) return
     try {
       setStatus('loading')
       await dispatch(
@@ -104,7 +105,7 @@ const EditMember = () => {
   }
 
   const removeHandler = async () => {
-    if (!chamberId || !membershipId) return
+    if (!chamberId || !membershipId || isSelf) return
     if (!window.confirm('Are you sure you want to remove this member from the chamber?')) return
     try {
       setStatus('loading')
@@ -150,7 +151,34 @@ const EditMember = () => {
         </div>
       )}
 
-      {canEdit && targetMember && (
+      {canEdit && targetMember && isSelf && (
+        <div className="space-y-6">
+          <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-md">
+            <div className="text-sm font-medium text-zinc-900">
+              {targetMember.user.firstName} {targetMember.user.lastName} <span className="text-xs font-normal text-zinc-500">(You)</span>
+            </div>
+            <div className="text-xs text-zinc-500">
+              @{targetMember.user.userName} · {targetMember.user.email}
+            </div>
+            <div className="text-xs font-mono text-zinc-400 mt-1">Role: {targetMember.role}</div>
+          </div>
+
+          <div className="text-sm text-amber-800 bg-amber-50 p-4 rounded-md border border-amber-200">
+            You can&apos;t edit your own permissions — ask another admin or the chamber owner.
+          </div>
+
+          <div className="flex items-center justify-end pt-4 border-t border-zinc-200">
+            <Link
+              to={`/chamber/${chamberId}`}
+              className="px-4 py-2 text-sm text-zinc-700 bg-zinc-100 rounded-md hover:bg-zinc-200 transition-colors"
+            >
+              Back to Chamber
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {canEdit && targetMember && !isSelf && (
         <form onSubmit={saveMemberHandler} className="space-y-6">
           <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-md">
             <div className="text-sm font-medium text-zinc-900">

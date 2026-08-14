@@ -22,8 +22,7 @@ const Login = () => {
       setError('')
       await dispatch(loginUser({ email, password }))
       setStatus('success')
-      console.log(user)
-      navigate('/case')
+      navigate('/dashboard')
     } catch (err) {
       setStatus('error')
       if (err instanceof Error) {
