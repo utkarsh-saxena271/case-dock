@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../store/store"
-import { refreshAccessToken } from "../store/actions/authActions"
+import { refreshAccessToken, fetchMe } from "../store/actions/authActions"
 
 interface Props {
     children: React.ReactNode
@@ -15,6 +15,7 @@ const AuthInitializer = ({ children }: Props) => {
         const check = async () => {
             try {
                 await dispatch(refreshAccessToken())
+                await dispatch(fetchMe())
             } catch (error) {
                 console.log('No active session')
             } finally {
