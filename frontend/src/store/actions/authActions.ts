@@ -56,12 +56,17 @@ export const registerUser = (data: RegisterPayload) => async (_dispatch: AppDisp
     }
 }
 
-export const logoutUser = () => async (dispatch: AppDispatch) => {
+export const logoutUser = () => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try {
-        const res = await instance.post('/auth/logout')
+        const state = getState();
+        const token = state.auth.accessToken
+        const res = await instance.post('/auth/logout',{},{
+            headers:{Authorization:`Bearer ${token}`}
+        })
         dispatch(clearCredentials())
         return res.data
     } catch (error) {
+        dispatch(clearCredentials()) 
         if (error instanceof Error) {
             console.error(error)
         }
