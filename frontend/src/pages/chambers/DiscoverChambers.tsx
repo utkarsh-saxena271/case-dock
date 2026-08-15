@@ -5,6 +5,7 @@ import { motion } from 'motion/react'
 import type { AppDispatch, RootState } from '../../store/store'
 import { discoverChambers } from '../../store/actions/chamberActions'
 import { createJoinRequest } from '../../store/actions/membershipActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const DiscoverChambers = () => {
   const [page, setPage] = useState<number>(1)
@@ -26,11 +27,7 @@ const DiscoverChambers = () => {
         setStatus('idle')
       } catch (err) {
         setStatus('error')
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('Failed to discover chambers')
-        }
+        setError(getErrorMessage(err, 'Failed to discover chambers'))
       }
     }, 300)
 

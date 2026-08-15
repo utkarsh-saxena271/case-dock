@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch, RootState } from '../../store/store'
 import { fetchMyCases } from '../../store/actions/caseActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 interface CaseListItemProps {
   id: string
@@ -13,9 +14,6 @@ interface CaseListItemProps {
   status: string
 }
 
-// Memoized so a re-render of CaseList (e.g. from unrelated Redux state
-// changes elsewhere in the store) doesn't force every row to re-render —
-// only rows whose own props actually changed will.
 const CaseListItem = memo(({ id, name, description, ownerType, status }: CaseListItemProps) => {
   return (
     <motion.div
@@ -78,11 +76,7 @@ const CaseList = () => {
         setStatus('success')
       } catch (err) {
         setStatus('error')
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('Error fetching cases')
-        }
+        setError(getErrorMessage(err, 'Error fetching cases'))
       }
     })()
   }, [dispatch])

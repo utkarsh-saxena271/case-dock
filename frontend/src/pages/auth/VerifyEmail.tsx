@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch } from '../../store/store'
 import { verifyEmail } from '../../store/actions/authActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams()
@@ -27,11 +28,7 @@ const VerifyEmail = () => {
         setTimeout(() => navigate('/auth/login'), 2000)
       } catch (err) {
         setStatus('error')
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('Verification failed')
-        }
+        setError(getErrorMessage(err, 'Verification failed'))
       }
     }
 

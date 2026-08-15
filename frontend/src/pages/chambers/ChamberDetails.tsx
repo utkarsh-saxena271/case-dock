@@ -7,6 +7,7 @@ import type { Permission } from '../../types/permissions'
 import { deleteChamber, fetchMyChamberById } from '../../store/actions/chamberActions'
 import { fetchJoinRequests, reviewJoinRequest } from '../../store/actions/membershipActions'
 import { fetchChamberCases } from '../../store/actions/caseActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const ALL_PERMISSIONS: Permission[] = [
   'READ_CASE',
@@ -56,11 +57,7 @@ const ChamberDetails = () => {
         setChamberStatus('success')
       } catch (error) {
         setChamberStatus('error')
-        if (error instanceof Error) {
-          setChamberError(error.message)
-        } else {
-          setChamberError('Could not fetch chamber data')
-        }
+        setChamberError(getErrorMessage(error, 'Could not fetch chamber data'))
       }
     })()
   }, [chamberId, dispatch])
@@ -74,11 +71,7 @@ const ChamberDetails = () => {
         setInviteStatus('success')
       } catch (error) {
         setInviteStatus('error')
-        if (error instanceof Error) {
-          setInviteError(error.message)
-        } else {
-          setInviteError('Could not fetch join requests')
-        }
+        setInviteError(getErrorMessage(error, 'Could not fetch join requests'))
       }
     })()
   }, [chamberId, canInvite, dispatch])
@@ -92,11 +85,7 @@ const ChamberDetails = () => {
         setCasesStatus('success')
       } catch (error) {
         setCasesStatus('error')
-        if (error instanceof Error) {
-          setCasesError(error.message)
-        } else {
-          setCasesError('Could not fetch chamber cases')
-        }
+        setCasesError(getErrorMessage(error, 'Could not fetch chamber cases'))
       }
     })()
   }, [chamberId, canReadCases, dispatch])

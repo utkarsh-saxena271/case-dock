@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch } from '../../store/store'
 import { forgotPassword } from '../../store/actions/authActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState<string>('')
@@ -21,11 +22,7 @@ const ForgotPassword = () => {
       setStatus('success')
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Password reset request failed')
-      }
+      setError(getErrorMessage(err, 'Password reset request failed'))
     }
   }
 

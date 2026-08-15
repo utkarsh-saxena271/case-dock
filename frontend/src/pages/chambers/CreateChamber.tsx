@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch } from '../../store/store'
 import { createChamber } from '../../store/actions/chamberActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const CreateChamber = () => {
   const [status, setStatus] = useState<'idle' | 'error' | 'loading' | 'success'>('idle')
@@ -23,11 +24,7 @@ const CreateChamber = () => {
       navigate(`/chamber/${res.id}`)
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Error in creating chamber')
-      }
+      setError(getErrorMessage(err, 'Error in creating chamber'))
     }
   }
 

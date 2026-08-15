@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch, RootState } from '../../store/store'
 import { fetchMyChambers } from '../../store/actions/chamberActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 interface ChamberListItemProps {
   id: string
@@ -61,11 +62,7 @@ const ChamberList = () => {
         }
       } catch (err) {
         setStatus('error')
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('Error in fetching chambers')
-        }
+        setError(getErrorMessage(err, 'Error in fetching chambers'))
       }
     })()
   }, [dispatch])

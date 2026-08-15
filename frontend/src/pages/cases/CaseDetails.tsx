@@ -12,6 +12,7 @@ import {
   uploadHearingDocument
 } from '../../store/actions/documentActions'
 import { fetchMyChamberById } from '../../store/actions/chamberActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const CaseDetails = () => {
   const [caseStatus, setCaseStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -82,11 +83,7 @@ const CaseDetails = () => {
         setCaseStatus('success')
       } catch (err) {
         setCaseStatus('error')
-        if (err instanceof Error) {
-          setCaseError(err.message)
-        } else {
-          setCaseError('Failed to fetch case details')
-        }
+        setCaseError(getErrorMessage(err, 'Failed to fetch case details'))
       }
     })()
   }, [caseId, dispatch])
@@ -100,11 +97,7 @@ const CaseDetails = () => {
         setHearingsStatus('success')
       } catch (err) {
         setHearingsStatus('error')
-        if (err instanceof Error) {
-          setHearingsError(err.message)
-        } else {
-          setHearingsError('Failed to fetch hearings')
-        }
+        setHearingsError(getErrorMessage(err, 'Failed to fetch hearings'))
       }
     })()
   }, [caseId, dispatch])
@@ -118,11 +111,7 @@ const CaseDetails = () => {
         setDocsStatus('success')
       } catch (err) {
         setDocsStatus('error')
-        if (err instanceof Error) {
-          setDocsError(err.message)
-        } else {
-          setDocsError('Failed to fetch case documents')
-        }
+        setDocsError(getErrorMessage(err, 'Failed to fetch case documents'))
       }
     })()
   }, [caseId, dispatch])
@@ -152,11 +141,7 @@ const CaseDetails = () => {
       setIsEditingCase(false)
     } catch (err) {
       setCaseStatus('error')
-      if (err instanceof Error) {
-        setCaseError(err.message)
-      } else {
-        setCaseError('Failed to update case')
-      }
+      setCaseError(getErrorMessage(err, 'Failed to update case'))
     }
   }
 
@@ -169,11 +154,7 @@ const CaseDetails = () => {
       navigate('/case')
     } catch (err) {
       setCaseStatus('error')
-      if (err instanceof Error) {
-        setCaseError(err.message)
-      } else {
-        setCaseError('Failed to delete case')
-      }
+      setCaseError(getErrorMessage(err, 'Failed to delete case'))
     }
   }
 
@@ -237,11 +218,7 @@ const CaseDetails = () => {
       setCaseUploadStatus('success')
     } catch (err) {
       setCaseUploadStatus('error')
-      if (err instanceof Error) {
-        setCaseUploadError(err.message)
-      } else {
-        setCaseUploadError('Failed to upload document')
-      }
+      setCaseUploadError(getErrorMessage(err, 'Failed to upload document'))
     }
   }
 

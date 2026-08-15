@@ -6,6 +6,7 @@ import type { AppDispatch, RootState } from '../../store/store'
 import type { Permission } from '../../types/permissions'
 import { fetchMyChamberById } from '../../store/actions/chamberActions'
 import { removeMemberDel, updateMember } from '../../store/actions/membershipActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const ALL_PERMISSIONS: Permission[] = [
   'READ_CASE',
@@ -63,11 +64,7 @@ const EditMember = () => {
           setStatus('idle')
         } catch (err) {
           setStatus('error')
-          if (err instanceof Error) {
-            setError(err.message)
-          } else {
-            setError('Failed to fetch chamber details')
-          }
+          setError(getErrorMessage(err, 'Failed to fetch chamber details'))
         }
       })()
     }
@@ -96,11 +93,7 @@ const EditMember = () => {
       navigate(`/chamber/${chamberId}`)
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Failed to update member')
-      }
+      setError(getErrorMessage(err, 'Failed to update member'))
     }
   }
 
@@ -114,11 +107,7 @@ const EditMember = () => {
       navigate(`/chamber/${chamberId}`)
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Failed to remove member')
-      }
+      setError(getErrorMessage(err, 'Failed to remove member'))
     }
   }
 

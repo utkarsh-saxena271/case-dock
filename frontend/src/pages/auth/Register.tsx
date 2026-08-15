@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { registerUser } from '../../store/actions/authActions'
 import type { AppDispatch } from '../../store/store'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const Register = () => {
   const [firstName, setFirstName] = useState<string>('')
@@ -36,11 +37,7 @@ const Register = () => {
       setStatus('success')
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Registration failed')
-      }
+      setError(getErrorMessage(err, 'Registration failed'))
     }
   }
 

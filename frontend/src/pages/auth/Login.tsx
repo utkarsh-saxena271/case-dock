@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { loginUser } from '../../store/actions/authActions'
 import type { AppDispatch, RootState } from '../../store/store'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const Login = () => {
   const [email, setEmail] = useState<string>('')
@@ -15,7 +16,7 @@ const Login = () => {
   const navigate = useNavigate()
   const user = useSelector((state: RootState) => state.auth.user)
 
-  const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  const loginHandler = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       setStatus('loading')
@@ -25,11 +26,7 @@ const Login = () => {
       navigate('/dashboard')
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Invalid credentials or server error')
-      }
+      setError(getErrorMessage(err, 'Invalid credentials or server error'))
     }
   }
 

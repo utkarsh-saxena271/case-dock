@@ -5,6 +5,7 @@ import { motion } from 'motion/react'
 import type { AppDispatch, RootState } from '../../store/store'
 import { createCase } from '../../store/actions/caseActions'
 import { fetchMyChambers } from '../../store/actions/chamberActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const CreateCase = () => {
   const [status, setStatus] = useState<'idle' | 'success' | 'error' | 'loading'>('idle')
@@ -38,11 +39,7 @@ const CreateCase = () => {
       navigate(`/case/${res.id}`)
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Error creating case')
-      }
+      setError(getErrorMessage(err, 'Error creating case'))
     }
   }
 

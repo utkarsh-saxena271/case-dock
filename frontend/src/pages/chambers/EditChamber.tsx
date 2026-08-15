@@ -4,6 +4,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch, RootState } from '../../store/store'
 import { fetchMyChamberById, updateChamber } from '../../store/actions/chamberActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const EditChamber = () => {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -38,11 +39,7 @@ const EditChamber = () => {
           setStatus('idle')
         } catch (err) {
           setStatus('error')
-          if (err instanceof Error) {
-            setError(err.message)
-          } else {
-            setError('Failed to load chamber')
-          }
+          setError(getErrorMessage(err, 'Failed to load chamber'))
         }
       })()
     }
@@ -58,11 +55,7 @@ const EditChamber = () => {
       navigate(`/chamber/${chamberId}`)
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Failed to update chamber')
-      }
+      setError(getErrorMessage(err, 'Failed to update chamber'))
     }
   }
 

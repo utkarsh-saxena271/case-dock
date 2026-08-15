@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch } from '../../store/store'
 import { resetPassword } from '../../store/actions/authActions'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 
 const ResetPassword = () => {
   const [password, setPassword] = useState<string>('')
@@ -32,11 +33,7 @@ const ResetPassword = () => {
       }, 2000)
     } catch (err) {
       setStatus('error')
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Resetting password failed')
-      }
+      setError(getErrorMessage(err, 'Resetting password failed'))
     }
   }
 
