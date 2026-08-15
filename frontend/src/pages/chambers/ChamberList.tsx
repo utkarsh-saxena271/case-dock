@@ -1,9 +1,47 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch, RootState } from '../../store/store'
 import { fetchMyChambers } from '../../store/actions/chamberActions'
+
+interface ChamberListItemProps {
+  id: string
+  name: string
+  description?: string | null
+}
+
+const ChamberListItem = memo(({ id, name, description }: ChamberListItemProps) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15 }}
+      className="p-4 hover:bg-zinc-50 transition-colors flex items-center justify-between"
+    >
+      <div className="space-y-1">
+        <Link
+          to={`/chamber/${id}`}
+          className="text-sm font-semibold text-zinc-900 hover:text-zinc-700 hover:underline"
+        >
+          {name}
+        </Link>
+        {description ? (
+          <p className="text-xs text-zinc-500 line-clamp-1">{description}</p>
+        ) : (
+          <p className="text-xs text-zinc-400 italic">No description</p>
+        )}
+      </div>
+      <Link
+        to={`/chamber/${id}`}
+        className="text-xs font-medium text-zinc-500 hover:text-zinc-900"
+      >
+        View Chamber →
+      </Link>
+    </motion.div>
+  )
+})
+ChamberListItem.displayName = 'ChamberListItem'
 
 const ChamberList = () => {
   const [status, setStatus] = useState<'loading' | 'empty' | 'idle' | 'error'>('idle')
@@ -86,33 +124,12 @@ const ChamberList = () => {
       {status === 'idle' && chambers.length > 0 && (
         <div className="border border-zinc-200 rounded-lg bg-white divide-y divide-zinc-100">
           {chambers.map((chamber) => (
-            <motion.div
+            <ChamberListItem
               key={chamber.id}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
-              className="p-4 hover:bg-zinc-50 transition-colors flex items-center justify-between"
-            >
-              <div className="space-y-1">
-                <Link
-                  to={`/chamber/${chamber.id}`}
-                  className="text-sm font-semibold text-zinc-900 hover:text-zinc-700 hover:underline"
-                >
-                  {chamber.name}
-                </Link>
-                {chamber.description ? (
-                  <p className="text-xs text-zinc-500 line-clamp-1">{chamber.description}</p>
-                ) : (
-                  <p className="text-xs text-zinc-400 italic">No description</p>
-                )}
-              </div>
-              <Link
-                to={`/chamber/${chamber.id}`}
-                className="text-xs font-medium text-zinc-500 hover:text-zinc-900"
-              >
-                View Chamber →
-              </Link>
-            </motion.div>
+              id={chamber.id}
+              name={chamber.name}
+              description={chamber.description}
+            />
           ))}
         </div>
       )}

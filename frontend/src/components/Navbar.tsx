@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
@@ -12,7 +12,12 @@ const Navbar = () => {
   const location = useLocation()
   const user = useSelector((state: RootState) => state.auth.user)
 
-  const handleLogout = async () => {
+  // useCallback here keeps a stable function reference across re-renders
+  // (e.g. every route change re-renders Navbar since it reads useLocation).
+  // Without it, a brand-new handleLogout is created every render, which
+  // matters the moment this gets passed to a memoized child button —
+  // a new reference would defeat that memoization.
+  const handleLogout = useCallback(async () => {
     try {
       setLoggingOut(true)
       await dispatch(logoutUser())
@@ -24,7 +29,7 @@ const Navbar = () => {
     } finally {
       setLoggingOut(false)
     }
-  }
+  }, [dispatch, navigate])
 
   const navLinks = [
     { label: 'Dashboard', path: '/dashboard' },

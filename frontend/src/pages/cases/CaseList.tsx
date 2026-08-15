@@ -1,9 +1,67 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import type { AppDispatch, RootState } from '../../store/store'
 import { fetchMyCases } from '../../store/actions/caseActions'
+
+interface CaseListItemProps {
+  id: string
+  name: string
+  description?: string | null
+  ownerType: string
+  status: string
+}
+
+// Memoized so a re-render of CaseList (e.g. from unrelated Redux state
+// changes elsewhere in the store) doesn't force every row to re-render —
+// only rows whose own props actually changed will.
+const CaseListItem = memo(({ id, name, description, ownerType, status }: CaseListItemProps) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15 }}
+      className="p-4 hover:bg-zinc-50 transition-colors flex items-center justify-between"
+    >
+      <div className="space-y-1">
+        <Link
+          to={`/case/${id}`}
+          className="text-sm font-semibold text-zinc-900 hover:text-zinc-700 hover:underline"
+        >
+          {name}
+        </Link>
+        {description && (
+          <p className="text-xs text-zinc-500 line-clamp-1">{description}</p>
+        )}
+        <div className="flex items-center gap-2 text-[11px] text-zinc-400">
+          <span>Owner: {ownerType}</span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <span
+          className={`text-xs px-2.5 py-0.5 rounded font-mono font-medium ${
+            status === 'ACTIVE'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+              : status === 'ON_HOLD'
+              ? 'bg-amber-50 text-amber-700 border border-amber-200'
+              : 'bg-zinc-100 text-zinc-600 border border-zinc-200'
+          }`}
+        >
+          {status}
+        </span>
+        <Link
+          to={`/case/${id}`}
+          className="text-xs text-zinc-500 hover:text-zinc-900"
+        >
+          View →
+        </Link>
+      </div>
+    </motion.div>
+  )
+})
+CaseListItem.displayName = 'CaseListItem'
 
 const CaseList = () => {
   const [error, setError] = useState<string>('')
@@ -73,48 +131,14 @@ const CaseList = () => {
       {myCases.length > 0 && (
         <div className="border border-zinc-200 rounded-lg bg-white divide-y divide-zinc-100">
           {myCases.map((myCase) => (
-            <motion.div
+            <CaseListItem
               key={myCase.id}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
-              className="p-4 hover:bg-zinc-50 transition-colors flex items-center justify-between"
-            >
-              <div className="space-y-1">
-                <Link
-                  to={`/case/${myCase.id}`}
-                  className="text-sm font-semibold text-zinc-900 hover:text-zinc-700 hover:underline"
-                >
-                  {myCase.name}
-                </Link>
-                {myCase.description && (
-                  <p className="text-xs text-zinc-500 line-clamp-1">{myCase.description}</p>
-                )}
-                <div className="flex items-center gap-2 text-[11px] text-zinc-400">
-                  <span>Owner: {myCase.ownerType}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span
-                  className={`text-xs px-2.5 py-0.5 rounded font-mono font-medium ${
-                    myCase.status === 'ACTIVE'
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      : myCase.status === 'ON_HOLD'
-                      ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                      : 'bg-zinc-100 text-zinc-600 border border-zinc-200'
-                  }`}
-                >
-                  {myCase.status}
-                </span>
-                <Link
-                  to={`/case/${myCase.id}`}
-                  className="text-xs text-zinc-500 hover:text-zinc-900"
-                >
-                  View →
-                </Link>
-              </div>
-            </motion.div>
+              id={myCase.id}
+              name={myCase.name}
+              description={myCase.description}
+              ownerType={myCase.ownerType}
+              status={myCase.status}
+            />
           ))}
         </div>
       )}
