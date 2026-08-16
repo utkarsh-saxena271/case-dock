@@ -1,0 +1,26 @@
+name: Deploy the backend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy backend to EC2
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into server and deploy
+        run: |
+          echo "${{ secrets.SSH_PVT_KEY }}" > ~/file.pem
+          chmod 600 ~/file.pem
+          ssh -i ~/file.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.VM_IP }} << 'EOF'
+            cd ~/case-dock/backend
+            git fetch origin
+            git reset --hard origin/main
+            npm ci
+            npx prisma generate
+            npx prisma migrate deploy
+            npm run build
+            pm2 restart case-dock-backend
+          EOF
