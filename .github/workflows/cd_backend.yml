@@ -15,7 +15,7 @@ jobs:
           echo "${{ secrets.SSH_PVT_KEY }}" > ~/file.pem
           chmod 600 ~/file.pem
           ssh -i ~/file.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.VM_IP }} << 'EOF'
-            cd ~/case-dock/backend
+            cd case-dock/backend
             git fetch origin
             git reset --hard origin/main
             npm ci
