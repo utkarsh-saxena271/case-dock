@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../store/store"
 import { refreshAccessToken, fetchMe } from "../store/actions/authActions"
+import OpeningLoader from "./OpeningLoader"
 
 interface Props {
     children: React.ReactNode
@@ -27,7 +28,7 @@ const AuthInitializer = ({ children }: Props) => {
     }, [])
 
     if (refreshing) {
-        return <div>Loading...</div>
+        return <OpeningLoader />
     }
 
     return <>{children}</>
