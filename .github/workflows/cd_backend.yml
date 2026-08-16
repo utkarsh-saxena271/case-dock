@@ -15,17 +15,14 @@ jobs:
           echo "${{ secrets.SSH_PVT_KEY }}" > ~/file.pem
           chmod 600 ~/file.pem
           ssh -i ~/file.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.VM_IP }} << 'EOF'
-            which node
-            which npm
-            node -v
-            npm -v
-            echo $PATH
             cd case-dock/backend
             git fetch origin
             git reset --hard origin/main
+            rm -rf node_modules
             npm ci
             npx prisma generate
             npx prisma migrate deploy
             npm run build
+            which pm2
             pm2 restart backend
           EOF
