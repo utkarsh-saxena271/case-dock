@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import Landing from '../pages/Landing'
 import AuthLayout from '../pages/auth/AuthLayout'
 import ProtectedRoute from './ProtectedRoute'
+import Loader from '../components/Loader'
 
 const Login = lazy(() => import('../pages/auth/Login'))
 const Register = lazy(() => import('../pages/auth/Register'))
@@ -23,15 +24,10 @@ const CaseDetails = lazy(() => import('../pages/cases/CaseDetails'))
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 
-const RouteFallback = () => (
-  <div className="min-h-screen flex items-center justify-center text-sm text-zinc-500">
-    Loading...
-  </div>
-)
 
 const MainRoutes = () => {
   return (
-    <Suspense fallback={<RouteFallback />}>
+    <Suspense fallback={<Loader />}>
       <Routes>
         <Route path="/" element={<Landing />} />
 
