@@ -22,5 +22,5 @@ jobs:
             npx prisma generate
             npx prisma migrate deploy
             npm run build
-            pm2 restart case-dock-backend
+            pm2 restart backend
           EOF
