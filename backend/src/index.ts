@@ -4,14 +4,17 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import fs from 'fs'
 import path from 'path';
+import http from 'http'
 
 import { envConfig } from './config/env.config.js'
 import errorHandler from './middlewares/error.middleware.js';
 import mainRouter from './routes/main.route.js';
 import client from './config/redis.config.js';
+import initWebsocketServer from './ws/wsServer.js'
 
 const PORT = envConfig.PORT
 const app = express()
+const server = http.createServer(app)
 
 
 // global middlewares
@@ -49,8 +52,8 @@ const startServer = async() => {
     try {
         ensureDirectories()
         await client.connect()
-
-        app.listen(PORT, () => {
+        initWebsocketServer(server)
+        server.listen(PORT, () => {
             console.log(`Server is listening at PORT : ${PORT}`)
         })
     } catch (error) {

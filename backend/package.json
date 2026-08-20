@@ -21,6 +21,7 @@
     "@types/multer": "^2.1.0",
     "@types/node": "^25.9.3",
     "@types/redis": "^4.0.10",
+    "@types/ws": "^8.18.1",
     "typescript": "^6.0.3"
   },
   "dependencies": {
@@ -40,6 +41,7 @@
     "nodemailer": "^9.0.4",
     "prisma": "^7.8.0",
     "redis": "^6.2.0",
+    "ws": "^8.21.3",
     "zod": "^4.4.3"
   }
 }

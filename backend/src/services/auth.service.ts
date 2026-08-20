@@ -9,6 +9,7 @@ import client from '../config/redis.config.js';
 import jwt, { type JwtPayload } from 'jsonwebtoken';
 import { envConfig } from '../config/env.config.js';
 import type { ForgotPassword, Login, Register } from '../types/auth.types.js';
+import { forceLogoutUser } from '../ws/socketManager.js';
 
 export const registerService = async (data: Register) => {
     const { fullName, userName, email, enrollmentNumber, password } = data;
@@ -89,7 +90,7 @@ export const loginService = async (data: Login) => {
     const refreshToken = generateRefreshToken(userExists.id);
 
     await client.set(`refresh:${userExists.id}`, refreshToken, { EX: 7 * 24 * 60 * 60 }); // 7 days in seconds
-
+    forceLogoutUser(userExists.id)
     return {
         refreshToken, accessToken,
         user: {
