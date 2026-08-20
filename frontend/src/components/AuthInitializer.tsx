@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../store/store"
 import { refreshAccessToken, fetchMe } from "../store/actions/authActions"
 import OpeningLoader from "./OpeningLoader"
+import { clearCredentials } from "../store/slices/authSlice"
 
 interface Props {
     children: React.ReactNode
@@ -19,6 +20,7 @@ const AuthInitializer = ({ children }: Props) => {
                 await dispatch(fetchMe())
             } catch (error) {
                 console.log('No active session')
+                dispatch(clearCredentials())
             } finally {
                 setRefreshing(false)
             }
